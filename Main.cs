@@ -79,6 +79,7 @@ namespace PlanetTweaks2
             GUILayout.Label(" + ");
             if (waiting)
             {
+                GUILayout.Button("waiting");
                 var e = Event.current;
                 if (e.isKey && e.type == EventType.KeyDown)
                 {

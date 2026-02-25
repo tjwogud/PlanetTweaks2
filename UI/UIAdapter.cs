@@ -15,6 +15,19 @@ namespace PlanetTweaks2.UI
             instance.name = "PlanetTweaks2UI";
             UI.Init(GetValue, SetValue);
             UI.Toggle(false);
+
+            UpdateProgress();
+            UpdateCheatCode();
+        }
+
+        public static void UpdateProgress()
+        {
+            UI.UpdateProgress(Persistence.GetOverallProgressStage() >= 8, Persistence.IsWorldComplete("T5"), Persistence.IsWorldComplete(60));
+        }
+
+        public static void UpdateCheatCode()
+        {
+            UI.UpdateCheatCode(Main.Settings.rainbowCode, Main.Settings.samuraiCode);
         }
 
         private static object GetValue(Keys key)

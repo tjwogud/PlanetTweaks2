@@ -22,6 +22,8 @@ namespace PlanetTweaks2
         public bool shortcutAlt           = false;
         public bool shortcutShift         = false;
         public KeyCode shortcutKey        = KeyCode.F1;
+        public bool rainbowCode           = false;
+        public bool samuraiCode           = false;
         public Color thirdPlanetColor     = Colors.greenColor;
         public float[] planetAlphaArr     = Arr(1f, 3);
         public Color[] tailColorArr       = Arr(Colors.disableColor, 3);

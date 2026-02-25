@@ -98,6 +98,7 @@ namespace PlanetTweaks2
         {
             Settings.Save(modEntry.Path);
             Logger.Log("Saved Settings");
+            Persistence.Save(true); // uhh... whynot
         }
     }
 }

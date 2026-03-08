@@ -22,6 +22,7 @@ namespace PlanetTweaks2
         public bool shortcutAlt           = false;
         public bool shortcutShift         = false;
         public KeyCode shortcutKey        = KeyCode.F1;
+        public string lastUsedFolder;
         public bool rainbowCode           = false;
         public bool samuraiCode           = false;
         public Color thirdPlanetColor     = Colors.greenColor;

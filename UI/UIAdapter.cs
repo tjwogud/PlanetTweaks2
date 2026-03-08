@@ -1,4 +1,6 @@
 ﻿using PlanetTweaks2.Components;
+using SFB;
+using System.IO;
 using UnityEngine;
 
 namespace PlanetTweaks2.UI
@@ -59,6 +61,20 @@ namespace PlanetTweaks2.UI
                     return Main.Settings.imageSizeArr[current];
                 case Keys.ImageFixRotation:
                     return Main.Settings.imageFixRotationArr[current];
+
+                case Keys.ImageSelectDialog:
+                    var exts = new ExtensionFilter[]
+                    {
+                        new ExtensionFilter("Image File", new string[]
+                        {
+                            "png", "jpg", "jpeg", "webp", "bmp", "gif", "apng"
+                        })
+                    };
+                    var result = StandaloneFileBrowser.OpenFilePanel("Select Image", Main.Settings.lastUsedFolder, exts, false);
+                    var path = result?[0];
+                    if (path != null)
+                        Main.Settings.lastUsedFolder = Path.GetDirectoryName(path);
+                    return path;
             }
             return null;
         }
@@ -87,12 +103,14 @@ namespace PlanetTweaks2.UI
                 case Keys.RingAlpha:
                     Main.Settings.ringAlphaArr[current] = (float)value;
                     break;
+
                 case Keys.Samurai:
                     Main.Settings.SetSamurai(current, (bool)value);
                     break;
                 case Keys.Emoji:
                     Main.Settings.SetEmoji(current, (bool)value);
                     break;
+
                 case Keys.Image:
                     Main.Settings.imageArr[current] = (PlanetImage)value;
                     break;
@@ -104,6 +122,10 @@ namespace PlanetTweaks2.UI
                     break;
                 case Keys.ImageFixRotation:
                     Main.Settings.imageFixRotationArr[current] = (bool)value;
+                    break;
+
+                case Keys.ImageSelectDialog:
+                    // i don't use this, this won't be happen
                     break;
             }
 

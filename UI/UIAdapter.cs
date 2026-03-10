@@ -1,7 +1,13 @@
-﻿using PlanetTweaks2.Components;
+﻿using Localizations2;
+using PlanetTweaks2.Components;
 using SFB;
 using System.IO;
+using System.Linq;
+using System.Text;
+using System.Xml;
+using TMPro;
 using UnityEngine;
+using UnityEngine.TextCore;
 
 namespace PlanetTweaks2.UI
 {
@@ -15,11 +21,13 @@ namespace PlanetTweaks2.UI
             var ui = bundle.LoadAsset<GameObject>("PlanetTweaks2UI");
             var instance = Object.Instantiate(ui);
             instance.name = "PlanetTweaks2UI";
-            UI.Init(GetValue, SetValue);
+            UI.Init(GetValue, SetValue, new Localization("1QcrRL6LAs8WxJj_hFsEJa3CLM5g3e8Ya0KQlRKXwdlU", 646714919, Main.Logger.Log, Main.ModEntry.Path, null, UI.Translate));
             UI.Toggle(false);
 
             UpdateProgress();
             UpdateCheatCode();
+
+            PTText.SetFont(RDConstants.data.koreanFontTMPro);
         }
 
         public static void UpdateProgress()
@@ -75,6 +83,9 @@ namespace PlanetTweaks2.UI
                     if (path != null)
                         Main.Settings.lastUsedFolder = Path.GetDirectoryName(path);
                     return path;
+
+                case Keys.Language:
+                    return Main.Settings.GetLanguage();
             }
             return null;
         }
@@ -126,6 +137,10 @@ namespace PlanetTweaks2.UI
 
                 case Keys.ImageSelectDialog:
                     // i don't use this, this won't be happen
+                    break;
+
+                case Keys.Language:
+                    Main.Settings.language = (SystemLanguage)value;
                     break;
             }
 

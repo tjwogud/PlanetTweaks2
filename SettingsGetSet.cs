@@ -67,5 +67,14 @@ namespace PlanetTweaks2
             else
                 thirdEmoji = value;
         }
+
+        public SystemLanguage GetLanguage()
+        {
+            if (language == SystemLanguage.Unknown)
+            {
+                return RDString.language == SystemLanguage.Korean ? SystemLanguage.Korean : SystemLanguage.English;
+            }
+            return language;
+        }
     }
 }

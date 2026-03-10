@@ -1,13 +1,10 @@
 ﻿using Localizations2;
 using PlanetTweaks2.Components;
+using PlanetTweaks2.Utils;
 using SFB;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Xml;
 using TMPro;
 using UnityEngine;
-using UnityEngine.TextCore;
 
 namespace PlanetTweaks2.UI
 {
@@ -18,6 +15,14 @@ namespace PlanetTweaks2.UI
         public static void Init(string bundlePath)
         {
             var bundle = AssetBundle.LoadFromFile(bundlePath);
+
+            // check tmp settings
+            var tmpsettings = TMP_Settings.instance;
+            if (!tmpsettings)
+            {
+                typeof(TMP_Settings).Set("s_Instance", bundle.LoadAsset<TMP_Settings>("TMP Settings"));
+            }
+
             var ui = bundle.LoadAsset<GameObject>("PlanetTweaks2UI");
             var instance = Object.Instantiate(ui);
             instance.name = "PlanetTweaks2UI";
@@ -92,7 +97,6 @@ namespace PlanetTweaks2.UI
 
         private static void SetValue(Keys key, object value)
         {
-            Main.Logger.Log($"{key} : {value}");
             var current = UI.current;
             switch (key)
             {

@@ -18,27 +18,27 @@ namespace PlanetTweaks2
 
         public string _comment_kr = "불 행성과 얼음 행성의 색은 얼불춤 기본 설정에 저장됩니다.";
         public string _comment_en = "Fire Planet and Ice Planet's Colors are Saved in Adofai Built-in Settings";
-        public bool shortcutCtrl          = false;
-        public bool shortcutAlt           = false;
-        public bool shortcutShift         = false;
-        public KeyCode shortcutKey        = KeyCode.F1;
+        public bool shortcutCtrl            = false;
+        public bool shortcutAlt             = false;
+        public bool shortcutShift           = false;
+        public KeyCode shortcutKey          = KeyCode.F1;
         public string lastUsedFolder;
-        public SystemLanguage language    = SystemLanguage.Unknown;
-        public bool rainbowCode           = false;
-        public bool samuraiCode           = false;
-        public Color thirdPlanetColor     = Colors.greenColor;
-        public float[] planetAlphaArr     = Arr(1f, 3);
-        public Color[] tailColorArr       = Arr(Colors.disableColor, 3);
-        public float[] tailAlphaArr       = Arr(1f, 3);
-        public Color[] ringColorArr       = Arr(Colors.disableColor, 3);
-        public float[] ringAlphaArr       = Arr(.4f, 3);
-        public bool thirdSamurai          = false;
-        public bool thirdEmoji            = false;
+        public SystemLanguage language      = SystemLanguage.Unknown;
+        public bool rainbowCode             = false;
+        public bool samuraiCode             = false;
+        public PlanetColor thirdPlanetColor = new PlanetColor(Colors.greenColor);
+        public float[] planetAlphaArr       = Arr(1f, 3);
+        public PlanetColor[] tailColorArr   = Arr(new PlanetColor(PlanetColorPresetEx.Disable), 3);
+        public float[] tailAlphaArr         = Arr(1f, 3);
+        public PlanetColor[] ringColorArr   = Arr(new PlanetColor(PlanetColorPresetEx.Disable), 3);
+        public float[] ringAlphaArr         = Arr(.4f, 3);
+        public bool thirdSamurai            = false;
+        public bool thirdEmoji              = false;
         [JsonIgnore]
-        public PlanetImage[] imageArr     = new PlanetImage[3];
-        public Vector2[] imagePositionArr = new Vector2[3];
-        public Vector2[] imageSizeArr     = Arr(Vector2.one * 100, 3);
-        public bool[] imageFixRotationArr = new bool[3];
+        public PlanetImage[] imageArr       = new PlanetImage[3];
+        public Vector2[] imagePositionArr   = new Vector2[3];
+        public Vector2[] imageSizeArr       = Arr(Vector2.one * 100, 3);
+        public bool[] imageFixRotationArr   = new bool[3];
 
         public void Save(string dir)
         {
@@ -48,7 +48,7 @@ namespace PlanetTweaks2
             var filePath = Path.Combine(dir, "Settings.json");
 
             var jsonSettings = new JsonSerializerSettings();
-            jsonSettings.Converters.Add(new ColorJsonConverter());
+            jsonSettings.Converters.Add(new PlanetColorJsonConverter());
             jsonSettings.Converters.Add(new Vector2JsonConverter());
             jsonSettings.Formatting = Formatting.Indented;
 
@@ -73,7 +73,7 @@ namespace PlanetTweaks2
                 return new Settings();
 
             var jsonSettings = new JsonSerializerSettings();
-            jsonSettings.Converters.Add(new ColorJsonConverter());
+            jsonSettings.Converters.Add(new PlanetColorJsonConverter());
             jsonSettings.Converters.Add(new Vector2JsonConverter());
 
             var content = File.ReadAllText(filePath);
@@ -96,18 +96,26 @@ namespace PlanetTweaks2
             return settings;
         }
 
-        public class ColorJsonConverter : JsonConverter<Color>
+        public class PlanetColorJsonConverter : JsonConverter<PlanetColor>
         {
-            public override Color ReadJson(JsonReader reader, Type objectType, Color existingValue, bool hasExistingValue, JsonSerializer serializer)
+            public override PlanetColor ReadJson(JsonReader reader, Type objectType, PlanetColor existingValue, bool hasExistingValue, JsonSerializer serializer)
             {
-                var arr = serializer.Deserialize<float[]>(reader);
+                var str = serializer.Deserialize<string>(reader);
 
-                return new Color(arr[0], arr[1], arr[2], arr[3]);
+                if (Enum.TryParse(str, true, out PlanetColorPreset preset))
+                {
+                    return new PlanetColor(preset);
+                }
+                if (RDUtils.TryHexToColor(str, out Color customColor))
+                {
+                    return new PlanetColor(customColor);
+                }
+                return new PlanetColor(PlanetColorPresetEx.Disable);
             }
 
-            public override void WriteJson(JsonWriter writer, Color value, JsonSerializer serializer)
+            public override void WriteJson(JsonWriter writer, PlanetColor value, JsonSerializer serializer)
             {
-                serializer.Serialize(writer, new float[] { value.r, value.g, value.b, value.a });
+                serializer.Serialize(writer, value.customColor.HasValue ? ColorUtility.ToHtmlStringRGB(value.customColor.Value) : value.preset.ToString());
             }
         }
 

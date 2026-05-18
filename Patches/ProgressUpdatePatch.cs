@@ -3,7 +3,7 @@ using PlanetTweaks2.UI;
 
 namespace PlanetTweaks2.Patches
 {
-    [HarmonyPatch(typeof(Persistence), "SetPercentCompletion", typeof(int), typeof(float))]
+    [HarmonyPatch(typeof(Persistence), "SetPercentCompletion", typeof(int), typeof(float), typeof(bool))]
     public class ProgressUpdatePatch
     {
         public static void Postfix()

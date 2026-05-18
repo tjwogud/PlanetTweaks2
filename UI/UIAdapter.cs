@@ -1,10 +1,10 @@
 ﻿using Localizations2;
 using PlanetTweaks2.Components;
 using PlanetTweaks2.Utils;
-using SFB;
 using System.IO;
 using TMPro;
 using UnityEngine;
+using UnityFileDialog;
 
 namespace PlanetTweaks2.UI
 {
@@ -51,15 +51,15 @@ namespace PlanetTweaks2.UI
             switch (key)
             {
                 case Keys.PlanetColor:
-                    return Main.Settings.GetPlanetColor(current);
+                    return Main.Settings.GetPlanetColor(current).ToSimple();
                 case Keys.PlanetAlpha:
                     return Main.Settings.planetAlphaArr[current];
                 case Keys.TailColor:
-                    return Main.Settings.tailColorArr[current];
+                    return Main.Settings.tailColorArr[current].ToSimple();
                 case Keys.TailAlpha:
                     return Main.Settings.tailAlphaArr[current];
                 case Keys.RingColor:
-                    return Main.Settings.ringColorArr[current];
+                    return Main.Settings.ringColorArr[current].ToSimple();
                 case Keys.RingAlpha:
                     return Main.Settings.ringAlphaArr[current];
                 case Keys.Samurai:
@@ -76,15 +76,11 @@ namespace PlanetTweaks2.UI
                     return Main.Settings.imageFixRotationArr[current];
 
                 case Keys.ImageSelectDialog:
-                    var exts = new ExtensionFilter[]
+                    var exts = new string[]
                     {
-                        new ExtensionFilter("Image File", new string[]
-                        {
-                            "png", "jpg", "jpeg", "webp", "bmp", "gif", "apng"
-                        })
+                        "png", "jpg", "jpeg", "webp", "bmp", "gif", "apng"
                     };
-                    var result = StandaloneFileBrowser.OpenFilePanel("Select Image", Main.Settings.lastUsedFolder, exts, false);
-                    var path = result?[0];
+                    var path = FileBrowser.PickFile(Main.Settings.lastUsedFolder, "Image File", exts, "Select Image");
                     if (path != null)
                         Main.Settings.lastUsedFolder = Path.GetDirectoryName(path);
                     return path;
@@ -101,19 +97,19 @@ namespace PlanetTweaks2.UI
             switch (key)
             {
                 case Keys.PlanetColor:
-                    Main.Settings.SetPlanetColor(current, (Color)value);
+                    Main.Settings.SetPlanetColor(current, ((SimplePlanetColor)value).ToAdofai());
                     break;
                 case Keys.PlanetAlpha:
                     Main.Settings.planetAlphaArr[current] = (float)value;
                     break;
                 case Keys.TailColor:
-                    Main.Settings.tailColorArr[current] = (Color)value;
+                    Main.Settings.tailColorArr[current] = ((SimplePlanetColor)value).ToAdofai();
                     break;
                 case Keys.TailAlpha:
                     Main.Settings.tailAlphaArr[current] = (float)value;
                     break;
                 case Keys.RingColor:
-                    Main.Settings.ringColorArr[current] = (Color)value;
+                    Main.Settings.ringColorArr[current] = ((SimplePlanetColor)value).ToAdofai();
                     break;
                 case Keys.RingAlpha:
                     Main.Settings.ringAlphaArr[current] = (float)value;

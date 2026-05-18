@@ -1,5 +1,6 @@
 ﻿using PlanetTweaks2.UI;
 using UnityEngine;
+using static CameraFilterPack_NightVisionFX;
 
 namespace PlanetTweaks2.Components
 {
@@ -83,48 +84,49 @@ namespace PlanetTweaks2.Components
                 Renderer.ToggleSamurai(false, true);
                 Renderer.SetEmojiMode(Main.Settings.GetEmoji(Type), false);
             }
-            Color planetColor = Main.Settings.GetPlanetColor(Type);
-            if (planetColor == Colors.goldColor || GCS.d_forceGoldPlanets /* what is this? */)
+            PlanetColor planetColor = Main.Settings.GetPlanetColor(Type);
+            var planetAlpha = Main.Settings.planetAlphaArr[Type];
+            if (planetColor.preset == PlanetColorPreset.Gold || GCS.d_forceGoldPlanets /* what is this? */)
             {
                 Renderer.DisableAllSpecialPlanets();
                 Renderer.SwitchToGold();
             }
-            else if (planetColor == Colors.overseerColor)
+            else if (planetColor.preset == PlanetColorPreset.Overseer)
             {
                 Renderer.DisableAllSpecialPlanets();
                 Renderer.SwitchToOverseer();
             }
-            else if (planetColor == Colors.rainbowColor)
+            else if (planetColor.preset == PlanetColorPreset.Rainbow)
             {
                 Renderer.EnableCustomColor();
                 Renderer.SetRainbow(true);
             }
             else
             {
-                var planetAlpha = Main.Settings.planetAlphaArr[Type];
-                if (planetColor == Color.red || planetColor == Color.blue)
+                var preset = planetColor.preset;
+                if (preset == PlanetColorPreset.DefaultRed || preset == PlanetColorPreset.DefaultBlue)
                 {
-                    int defaultColor = (planetColor == Color.red) ? 0 : 1;
-                    Renderer.DisableCustomColor(true /* this one is also not important */, defaultColor);
+                    int defaultColor = (preset == PlanetColorPreset.DefaultRed) ? 0 : 1;
+                    Renderer.EnableDefaultFireAndIceColor(true /* this one is also not important */, defaultColor);
                     Renderer.sprite.color = Color.white.WithAlpha(planetAlpha);
-                    Renderer.SetCoreColor(planetColor.WithAlpha(planetAlpha));
-                    Renderer.faceSprite.color = planetColor.WithAlpha(planetAlpha);
+                    Renderer.SetCoreColor(planetColor.ToRealColor().WithAlpha(planetAlpha));
+                    Renderer.faceSprite.color = planetColor.ToRealColor().WithAlpha(planetAlpha);
                 }
                 else
                 {
                     Renderer.EnableCustomColor();
-                    Renderer.SetPlanetColor(planetColor.WithAlpha(planetAlpha));
+                    Renderer.SetPlanetColor(planetColor.ToRealColor().WithAlpha(planetAlpha));
                 }
 
                 var tailColor = Main.Settings.tailColorArr[Type];
-                if (tailColor == Colors.disableColor) tailColor = planetColor;
+                if (tailColor.preset == PlanetColorPresetEx.Disable) tailColor = planetColor;
                 var tailAlpha = Main.Settings.tailAlphaArr[Type];
-                Renderer.SetTailColor(tailColor.WithAlpha(tailAlpha));
+                Renderer.SetTailColor(tailColor.ToRealColor().WithAlpha(tailAlpha));
 
                 var ringColor = Main.Settings.ringColorArr[Type];
-                if (ringColor == Colors.disableColor) ringColor = planetColor;
+                if (ringColor.preset == PlanetColorPresetEx.Disable) ringColor = planetColor;
                 var ringAlpha = Main.Settings.ringAlphaArr[Type];
-                Renderer.ring.color = ringColor.WithAlpha(ringAlpha);
+                Renderer.ringComp.color = ringColor.ToRealColor().WithAlpha(ringAlpha);
             }
             if (scrLogoText.instance)
                 scrLogoText.instance.UpdateColors();

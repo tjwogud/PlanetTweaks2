@@ -3,7 +3,7 @@ using PlanetTweaks2.UI;
 
 namespace PlanetTweaks2.Patches
 {
-    [HarmonyPatch(typeof(scnLevelSelect), "RainbowMode")]
+    [HarmonyPatch(typeof(PlanetarySystem), "RainbowMode")]
     public class UnlockCheatCodePatch1
     {
         public static void Postfix()
@@ -13,7 +13,7 @@ namespace PlanetTweaks2.Patches
         }
     }
 
-    [HarmonyPatch(typeof(scnLevelSelect), "SamuraiMode")]
+    [HarmonyPatch(typeof(PlanetarySystem), "SamuraiMode")]
     public class UnlockCheatCodePatch2
     {
         public static void Postfix()

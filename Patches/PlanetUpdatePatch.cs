@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace PlanetTweaks2.Patches
 {
-    [HarmonyPatch(typeof(PlanetarySystem), "ColorPlanets")]
+    [HarmonyPatch(typeof(PlanetarySystem), "ApplyMultiplanetColors")]
     public class PlanetUpdatePatch1
     {
         public static void Postfix()

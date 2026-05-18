@@ -1,39 +1,22 @@
 ﻿using PlanetTweaks2.UI;
+using PlanetTweaks2.Utils;
 using UnityEngine;
 
 namespace PlanetTweaks2
 {
     public partial class Settings
     {
-        public Color GetPlanetColor(int type)
+        public PlanetColor GetPlanetColor(int type)
         {
-            if (type < 2)
-            {
-                var color = Persistence.GetPlayerColor(type == 0);
-                if (color == PlanetRenderer.goldColor)
-                    return Colors.goldColor;
-                else if (color == PlanetRenderer.rainbowColor)
-                    return Colors.rainbowColor;
-                else if (color == PlanetRenderer.overseerColor)
-                    return Colors.overseerColor;
-                return scrMisc.PlayerColorToRealColor(color);
-            }
-            return thirdPlanetColor;
+            return type < 2
+                ? Persistence.GetPlayerColor(type == 0)
+                : thirdPlanetColor;
         }
 
-        public void SetPlanetColor(int type, Color color)
+        public void SetPlanetColor(int type, PlanetColor color)
         {
             if (type < 2)
-            {
-                var converted = color;
-                if (converted == Colors.goldColor)
-                    converted = PlanetRenderer.goldColor;
-                else if (converted == Colors.rainbowColor)
-                    converted = PlanetRenderer.rainbowColor;
-                else if (converted == Colors.overseerColor)
-                    converted = PlanetRenderer.overseerColor;
-                Persistence.SetPlayerColor(converted, type == 0);
-            }
+                Persistence.SetPlayerColor(color, type == 0);
             else
                 thirdPlanetColor = color;
         }
